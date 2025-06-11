@@ -1,0 +1,97 @@
+{
+  "name": "habitflow",
+  "version": "1.0.0",
+  "description": "A modern daily habit tracker with cloud sync, analytics, and beautiful UI",
+  "keywords": [
+    "habit-tracker",
+    "productivity",
+    "react",
+    "fastapi",
+    "typescript",
+    "tailwind",
+    "docker",
+    "postgresql"
+  ],
+  "homepage": "https://github.com/your-username/habitflow#readme",
+  "bugs": {
+    "url": "https://github.com/your-username/habitflow/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-username/habitflow.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "HabitFlow Team",
+    "email": "team@habitflow.com",
+    "url": "https://habitflow.com"
+  },
+  "contributors": [
+    {
+      "name": "Your Name",
+      "email": "your.email@example.com",
+      "url": "https://github.com/your-username"
+    }
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && source venv/bin/activate && uvicorn main:app --reload --host 0.0.0.0 --port 8000",
+    "dev:frontend": "cd frontend && pnpm run dev",
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "cd frontend && pnpm run build",
+    "build:backend": "cd backend && python -m build",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd backend && pytest",
+    "test:frontend": "cd frontend && pnpm run test",
+    "test:coverage": "npm run test:backend:coverage && npm run test:frontend:coverage",
+    "test:backend:coverage": "cd backend && pytest --cov=app --cov-report=html",
+    "test:frontend:coverage": "cd frontend && pnpm run test:coverage",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "lint:backend": "cd backend && flake8 app/ && black --check app/ && isort --check-only app/",
+    "lint:frontend": "cd frontend && pnpm run lint",
+    "format": "npm run format:backend && npm run format:frontend",
+    "format:backend": "cd backend && black app/ && isort app/",
+    "format:frontend": "cd frontend && pnpm run format",
+    "type-check": "npm run type-check:backend && npm run type-check:frontend",
+    "type-check:backend": "cd backend && mypy app/",
+    "type-check:frontend": "cd frontend && pnpm run type-check",
+    "docker:build": "docker-compose -f infra/docker-compose.yml build",
+    "docker:up": "docker-compose -f infra/docker-compose.yml up -d",
+    "docker:down": "docker-compose -f infra/docker-compose.yml down",
+    "docker:logs": "docker-compose -f infra/docker-compose.yml logs -f",
+    "docker:clean": "docker-compose -f infra/docker-compose.yml down -v && docker system prune -f",
+    "setup:dev": "./scripts/setup-dev.sh",
+    "deploy:prod": "./scripts/deploy-prod.sh",
+    "db:migrate": "cd backend && alembic upgrade head",
+    "db:migration": "cd backend && alembic revision --autogenerate",
+    "db:reset": "cd backend && alembic downgrade base && alembic upgrade head",
+    "docs:api": "cd backend && python -c \"import json; from main import app; print(json.dumps(app.openapi(), indent=2))\" > api-docs.json",
+    "docs:serve": "cd docs && python -m http.server 8080",
+    "clean": "npm run clean:backend && npm run clean:frontend",
+    "clean:backend": "cd backend && rm -rf __pycache__ .pytest_cache .coverage htmlcov/ dist/ build/ *.egg-info/",
+    "clean:frontend": "cd frontend && rm -rf node_modules dist .next out coverage",
+    "install:all": "npm run install:backend && npm run install:frontend",
+    "install:backend": "cd backend && pip install -r requirements.txt",
+    "install:frontend": "cd frontend && pnpm install",
+    "security:scan": "npm audit && cd frontend && pnpm audit",
+    "security:fix": "npm audit fix && cd frontend && pnpm audit fix"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=9.0.0",
+    "python": ">=3.11.0"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "private": true,
+  "workspaces": [
+    "frontend"
+  ]
+}
+
