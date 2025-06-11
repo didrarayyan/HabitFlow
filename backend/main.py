@@ -1,23 +1,20 @@
 """
-HabitFlow Backend - FastAPI Application
-Main application entry point with CORS, middleware, and route registration.
+HabitFlow FastAPI Application
 """
 
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.middleware.trustedhost import TrustedHostMiddleware
-from contextlib import asynccontextmanager
 
 from app.core.config import settings
 from app.core.database import create_tables
-from app.api.api_v1.api import api_router
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Application lifespan manager."""
+    """Application lifespan events."""
     # Startup
-    await create_tables()
+    create_tables()
     yield
     # Shutdown
     pass
@@ -37,45 +34,26 @@ def create_application() -> FastAPI:
     if settings.BACKEND_CORS_ORIGINS:
         app.add_middleware(
             CORSMiddleware,
-            allow_origins=[str(origin) for origin in settings.BACKEND_CORS_ORIGINS],
+            allow_origins=settings.BACKEND_CORS_ORIGINS,
             allow_credentials=True,
             allow_methods=["*"],
             allow_headers=["*"],
         )
 
-    # Add trusted host middleware
-    app.add_middleware(
-        TrustedHostMiddleware,
-        allowed_hosts=settings.ALLOWED_HOSTS,
-    )
-
-    # Include API router
-    app.include_router(api_router, prefix=settings.API_V1_STR)
-
     return app
 
 
+# Create the FastAPI app
 app = create_application()
 
 
 @app.get("/")
 async def root():
     """Root endpoint."""
-    return {"message": "HabitFlow API", "version": settings.VERSION}
+    return {"message": "Welcome to HabitFlow API", "version": settings.VERSION}
 
 
 @app.get("/health")
 async def health_check():
     """Health check endpoint."""
-    return {"status": "healthy"}
-
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(
-        "main:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=True,
-    )
-
+    return {"status": "healthy", "service": "HabitFlow API"}

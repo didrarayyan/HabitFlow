@@ -1,6 +1,5 @@
 """
-Database configuration and connection setup.
-Handles SQLAlchemy engine, session, and table creation.
+Database configuration and session management.
 """
 
 from sqlalchemy import create_engine
@@ -10,24 +9,24 @@ from sqlalchemy.pool import StaticPool
 
 from app.core.config import settings
 
-
-# Create database engine
+# Create database engine based on settings
 if settings.USE_SQLITE:
+    # SQLite configuration
+    SQLALCHEMY_DATABASE_URL = settings.SQLALCHEMY_DATABASE_URI
     engine = create_engine(
-        settings.SQLITE_DATABASE_URI,
+        SQLALCHEMY_DATABASE_URL,
         connect_args={"check_same_thread": False},
         poolclass=StaticPool,
     )
 else:
-    engine = create_engine(
-        str(settings.SQLALCHEMY_DATABASE_URI),
-        pool_pre_ping=True,
-    )
+    # PostgreSQL configuration
+    SQLALCHEMY_DATABASE_URL = settings.SQLALCHEMY_DATABASE_URI
+    engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
-# Create session factory
+# Create SessionLocal class
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Create base class for models
+# Create Base class for models
 Base = declarative_base()
 
 
@@ -40,10 +39,11 @@ def get_db():
         db.close()
 
 
-async def create_tables():
+def create_tables():
     """Create all database tables."""
-    # Import all models to ensure they are registered
-    from app.models import user, habit, habit_entry  # noqa
-    
     Base.metadata.create_all(bind=engine)
 
+
+def drop_tables():
+    """Drop all database tables."""
+    Base.metadata.drop_all(bind=engine)

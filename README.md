@@ -803,8 +803,5 @@ If you like this project, please consider:
   <p>Made with ❤️ by the HabitFlow team</p>
   <p>
     <a href="https://github.com/didrarayyan/HabitFlow">GitHub</a> •
-    <a href="https://habitflow.com">Website</a> •
-    <a href="https://docs.habitflow.com">Documentation</a> •
-    <a href="https://twitter.com/habitflow">Twitter</a>
   </p>
 </div>
