@@ -96,11 +96,14 @@ function App() {
   );
 }
 
-// App content with auth check
+// App content with auth check (BYPASSED FOR TESTING)
 const AppContent = () => {
   const { isAuthenticated, loading } = useAuth();
   
-  if (loading) {
+  // TEMPORARY BYPASS - Always show authenticated app
+  const bypassAuth = true;
+  
+  if (loading && !bypassAuth) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
@@ -111,7 +114,8 @@ const AppContent = () => {
     );
   }
   
-  return isAuthenticated ? (
+  // Show authenticated app (bypassed)
+  return bypassAuth || isAuthenticated ? (
     <HabitsProvider>
       <AppLayout />
     </HabitsProvider>
